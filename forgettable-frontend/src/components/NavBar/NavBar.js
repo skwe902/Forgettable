@@ -38,7 +38,7 @@ export default function NavBar() {
   }, {
     src: CompanyLogo,
     alt: 'Company Page',
-    path: '/settings',
+    path: '/company',
   }, {
     src: SettingsLogo,
     alt: 'Settings Page',
