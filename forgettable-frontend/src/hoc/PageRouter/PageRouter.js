@@ -6,6 +6,7 @@ import {AuthContext} from '../../context/AuthContext';
 import PersonPage from '../../pages/PersonPage/PersonPage';
 import EditPerson from '../../pages/edit/EditPerson';
 import SettingsPage from '../../pages/SettingsPage/SettingsPage';
+import CompanyPage from '../../pages/CompanyPage/CompanyPage';
 import EncountersListPage from '../../pages/EncountersListPage/EncountersListPage';
 import PersonsListPage from '../../pages/PersonsListPage/PersonsListPage';
 import Home from '../../pages/home/Home';
@@ -13,6 +14,7 @@ import LogInPage from '../../pages/LogInPage/LogInPage';
 import CreateEncounterPage from '../../pages/CreateEncounterPage/CreateEncounterPage';
 import Loading from '../../pages/Loading/Loading';
 import NotFound from '../../pages/NotFound/NotFound';
+import mockData from '../../pages/CompanyPage/mockData-company';
 
 /*
  * Component for all routing logic. Conditionally renders
@@ -46,6 +48,7 @@ const PageRouter = (props) => {
       <Routes>
 
         <Route path="/" element={<Home/>} />
+        <Route path="company" element={<CompanyPage/>} />
         <Route path="settings" element={<SettingsPage/>} />
         <Route path="people" element={<PersonsListPage/>} />
         <Route path="person/create" element={<EditPerson/>} />
