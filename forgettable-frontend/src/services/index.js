@@ -194,6 +194,6 @@ export const searchPersons = async (str) => {
  * @param {string} searchString string to search
  * @return {Promise}
  */
-export const searchCompany = async (str) => {
-  return await getData('company/?term=' + str);
+export const searchCompany = async (string) => {
+  return await getData('company/?term=' + string);
 };

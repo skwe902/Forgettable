@@ -127,21 +127,6 @@ export default function CompanyListPage(props) {
 
   return (
     <>
-      {isHover &&
-        <PersonDrawer
-          open={true}
-          name={`${selectedInfo.firstName} ${selectedInfo.lastName || ''}`}
-          id={selectedInfo.id}
-          birthday={selectedInfo.birthday}
-          img={selectedInfo.image}
-          gender={selectedInfo.gender}
-          organisation={selectedInfo.organisation}
-          socialMedia={selectedInfo.socialMedia}
-          firstMet={selectedInfo.firstMet}
-          location={selectedInfo.location}
-          interests={selectedInfo.interests}
-        />
-      }
       <CustomModal
         open={deleteModalOpen}
         onClose={() => setDeleteModalOpen(false)}
