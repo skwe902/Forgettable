@@ -6,6 +6,7 @@ import IconButton from '../../components/IconButton/IconButton';
 import PersonDrawer from '../../components/PersonDrawer/PersonDrawer';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import {searchPersons, deletePerson, getAllPersons, getEncounter} from '../../services';
+import {searchCompany, deleteCompany, getAllCompanies} from '../../services';
 import {useNavigate} from 'react-router-dom';
 import CustomModal from '../../components/CustomModal/CustomModal';
 import {ToastContainer, toast} from 'react-toastify';
@@ -24,9 +25,6 @@ const PAGE_SIZE = 10;
  */
 export default function CompanyListPage(props) {
   const navigate = useNavigate();
-
-  const [isHover, setIsHover] = useState(false);
-  const [selectedInfo, setSelectedInfo] = useState(undefined);
   const [hasMore, setHasMore] = useState(true);
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [personToDelete, setPersonToDelete] = useState();
@@ -34,7 +32,7 @@ export default function CompanyListPage(props) {
   const [currentPage, setCurrentPage] = useState(1);
 
   useEffect(async () => {
-    const result = await getAllPersons(currentPage, PAGE_SIZE);
+    const result = await getAllCompanies(currentPage, PAGE_SIZE);
 
     if (result) {
       const unmarshalledPersonList =
@@ -44,8 +42,8 @@ export default function CompanyListPage(props) {
 
             if (person.encounters && person.encounters.length > 0) {
               lastEncounter =
-               await getEncounter(
-                   person.encounters[0]);
+              await getEncounter(
+                  person.encounters[0]);
             }
 
             const lastMet = lastEncounter?.date;
