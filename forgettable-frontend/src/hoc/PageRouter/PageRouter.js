@@ -7,6 +7,7 @@ import PersonPage from '../../pages/PersonPage/PersonPage';
 import EditPerson from '../../pages/edit/EditPerson';
 import SettingsPage from '../../pages/SettingsPage/SettingsPage';
 import CompanyPage from '../../pages/CompanyPage/CompanyPage';
+import CompanyListPage from '../../pages/CompanyListPage/CompanyListPage';
 import EncountersListPage from '../../pages/EncountersListPage/EncountersListPage';
 import PersonsListPage from '../../pages/PersonsListPage/PersonsListPage';
 import Home from '../../pages/home/Home';
@@ -14,7 +15,7 @@ import LogInPage from '../../pages/LogInPage/LogInPage';
 import CreateEncounterPage from '../../pages/CreateEncounterPage/CreateEncounterPage';
 import Loading from '../../pages/Loading/Loading';
 import NotFound from '../../pages/NotFound/NotFound';
-import mockData from '../../pages/CompanyPage/mockData-company';
+import EditCompany from '../../pages/EditCompany/EditCompany';
 
 /*
  * Component for all routing logic. Conditionally renders
@@ -48,7 +49,10 @@ const PageRouter = (props) => {
       <Routes>
 
         <Route path="/" element={<Home/>} />
-        <Route path="company" element={<CompanyPage/>} />
+        <Route path="company" element={<CompanyListPage/>} />
+        <Route path="company/create" element={<EditCompany/>} />
+        <Route path="company/:id/edit" element={<EditCompany/>} />
+        <Route path="company/:id" element={<CompanyPage/>} />
         <Route path="settings" element={<SettingsPage/>} />
         <Route path="people" element={<PersonsListPage/>} />
         <Route path="person/create" element={<EditPerson/>} />
