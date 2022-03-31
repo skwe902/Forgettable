@@ -86,10 +86,10 @@ export default function EditCompany() {
     };
 
     if (create) {
-      const result = await apiCalls.createPerson(data);
+      const result = await apiCalls.createCompany(data);
 
       if (result) {
-        toastGenerator('success', 'Person Created!', 2000);
+        toastGenerator('success', 'Company Created!', 2000);
 
         setTimeout(()=> {
           navigate('/encounters/create', {state: {person: result}});
@@ -99,12 +99,12 @@ export default function EditCompany() {
         setLoading(false);
       }
     } else {
-      const result = await apiCalls.updatePerson(id, data);
+      const result = await apiCalls.updateCompany(id, data);
       if (result == '') {
-        toastGenerator('success', 'Person Saved!', 2000);
+        toastGenerator('success', 'Company Saved!', 2000);
 
         setTimeout(()=> {
-          navigate(`/person/${id}`);
+          navigate(`/company/${id}`);
         }, 1000);
       } else {
         toastGenerator('error', 'Something went wrong... :(', 2000);
@@ -167,18 +167,6 @@ export default function EditCompany() {
           <input ref={invisSocialMediaSubmitRef} id='submit' type="submit" className={classes.hiddenSubmit}/>
         </div>
       </form>
-
-      <ToastContainer
-        position="bottom-center"
-        autoClose={2000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-      />
     </div>
   );
 }

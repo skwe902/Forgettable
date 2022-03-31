@@ -1,6 +1,6 @@
 import {Avatar, AvatarGroup, StyledEngineProvider, SvgIcon} from '@mui/material';
 import React from 'react';
-import classes from './PersonCard.module.css';
+import classes from './CompanyCard.module.css';
 import IconButton from '@mui/material/IconButton';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
@@ -30,18 +30,6 @@ const CompanyCard = (props) => {
     event.stopPropagation();
     setAnchorEl(null);
   };
-
-  const socialMediaIcons = props.socialMedias &&
-    props.socialMedias.map((socialMedia, index) => {
-      return (
-        <Avatar
-          key={`${socialMedia.name}-${index}`}
-          src={convertSocialMediaToIcon(socialMedia.name)}
-          alt={socialMedia.name}
-        >
-        </Avatar>
-      );
-    });
 
   const menuItems = [
     {
@@ -78,7 +66,7 @@ const CompanyCard = (props) => {
               <div className={classes.IdentityInformation}>
                 <h2 data-testid="name-element">{props.name}</h2>
                 <p data-testid="first-met-element">
-                  {'First met ' + getFirstMetTimeString(props.firstMet)}
+                  {props.description}
                 </p>
               </div>
               <IconButton
@@ -137,31 +125,16 @@ const CompanyCard = (props) => {
               <p className={classes.Encounters}
                 data-testid="encounters-element"
               >
-                  Encounters: {props.numEncounters || '0'} times
+                  Location: {props.location}
               </p>
               <p className={classes.LastMet}
                 data-testid="last-met-element"
               >
-                Date last met: {
-                props.lastMet ?
-                <span>{getLongDateStringWithSlashes(props.lastMet)}</span> :
+                Date Founded: {
+                props.dateFounded ?
+                <span>{getLongDateStringWithSlashes(props.dateFounded)}</span> :
                  <UnknownDetail/>}
               </p>
-              <div className={classes.SocialMediaContainer}>
-                <AvatarGroup max={2}
-                  spacing={2}
-                  aria-label="social-media-icons"
-                  data-testid="social-media-icons-element"
-                  sx={{
-                    '& .MuiAvatar-root': {
-                      width: 20,
-                      height: 20,
-                      fontSize: 15},
-                  }}
-                >
-                  { socialMediaIcons }
-                </AvatarGroup>
-              </div>
             </div>
           </div>
         </div>
@@ -174,12 +147,9 @@ CompanyCard.propTypes = {
   id: PropTypes.string,
   name: PropTypes.string.isRequired,
   image: PropTypes.string,
-  socialMedias: PropTypes.arrayOf(PropTypes.string),
-  numEncounters: PropTypes.number,
-  lastMet: PropTypes.instanceOf(Date),
-  onEdit: PropTypes.func.isRequired,
-  onDelete: PropTypes.func.isRequired,
-  firstMet: PropTypes.instanceOf(Date),
+  location: PropTypes.string,
+  dateFounded: PropTypes.instanceOf(Date),
+  description: PropTypes.string,
 };
 
 

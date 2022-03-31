@@ -28,3 +28,15 @@ export const unmarshalEncounters = (encounter) => {
     }
   );
 };
+
+export const unmarshalCompany = (company) => {
+  return (
+    {
+      ...company,
+      dateFounded: company.dateFounded ? new Date(company.dateFounded) : null,
+      id: company.id,
+      location: company.location,
+      description: company.description,
+    }
+  );
+};

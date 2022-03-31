@@ -1,18 +1,16 @@
 import React, {useEffect, useState} from 'react';
-import PersonCard from '../../components/PersonCard/PersonCard';
 import SearchBar from '../../components/SearchBar/SearchBar';
 import classes from './CompanyListPage.module.css';
 import IconButton from '../../components/IconButton/IconButton';
-import PersonDrawer from '../../components/PersonDrawer/PersonDrawer';
 import InfiniteScroll from 'react-infinite-scroll-component';
-import {searchPersons, deletePerson, getAllPersons, getEncounter} from '../../services';
 import {searchCompany, deleteCompany, getAllCompanies} from '../../services';
 import {useNavigate} from 'react-router-dom';
 import CustomModal from '../../components/CustomModal/CustomModal';
 import {ToastContainer, toast} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import {toastGenerator} from '../../functions/helper';
-import {unmarshalPerson} from '../../functions/dataUnmarshaller';
+import CompanyCard from '../../components/CompanyCard/CompanyCard';
+import mockData from './mockData-company';
 
 const PAGE_SIZE = 10;
 
@@ -25,66 +23,41 @@ const PAGE_SIZE = 10;
  */
 export default function CompanyListPage(props) {
   const navigate = useNavigate();
+  const [isHover, setIsHover] = useState(false);
+  const [selectedInfo, setSelectedInfo] = useState(undefined);
   const [hasMore, setHasMore] = useState(true);
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
-  const [personToDelete, setPersonToDelete] = useState();
-  const [personList, setPersonList] = useState( [] );
+  const [companyToDelete, setCompanyToDelete] = useState();
+  const [companyList, setCompanyList] = useState([mockData]);
   const [currentPage, setCurrentPage] = useState(1);
-
-  useEffect(async () => {
-    const result = await getAllCompanies(currentPage, PAGE_SIZE);
-
-    if (result) {
-      const unmarshalledPersonList =
-      await Promise.all(
-          result.map(async (person) =>{
-            let lastEncounter;
-
-            if (person.encounters && person.encounters.length > 0) {
-              lastEncounter =
-              await getEncounter(
-                  person.encounters[0]);
-            }
-
-            const lastMet = lastEncounter?.date;
-
-
-            return {
-              ...unmarshalPerson(person),
-              lastMet,
-            };
-          }));
-      setPersonList(unmarshalledPersonList);
-    }
-  }, []);
 
   const onClickNewEntry = () => {
     navigate(`/company/create`);
   };
 
-  const onClickPersonCard = (id) => {
+  const onClickCompanyCard = (id) => {
     navigate(`/company/${id}`);
   };
 
-  const onDeletePersonCardClicked = (event, id) => {
+  const onDeleteCompanyCardClicked = (event, id) => {
     event.stopPropagation();
     setDeleteModalOpen(true);
-    setPersonToDelete(id);
+    setCompanyToDelete(id);
   };
 
-  const onEditPersonCardClicked = (event, id) => {
+  const onEditCompanyCardClicked = (event, id) => {
     event.stopPropagation();
     navigate(`/company/${id}/edit`);
   };
 
-  const onConfirmDeletePerson = async (id) => {
-    const result = await deletePerson(id);
+  const onConfirmDeleteCompany = async (id) => {
+    const result = await deleteCompany(id);
 
     if (result) {
-      const newPersonsList = personList.filter((p) => p._id !== id);
-      setPersonList(newPersonsList);
+      const newCompanyList = companyList.filter((p) => p._id !== id);
+      setCompanyList(newCompanyList);
 
-      toastGenerator('success', 'Person deleted!', 3000);
+      toastGenerator('success', 'Company deleted!', 3000);
     } else {
       toastGenerator('error', 'Something went wrong... :(', 3000);
     }
@@ -98,25 +71,25 @@ export default function CompanyListPage(props) {
     setTimeout(async () => {
       const newPage = currentPage + 1;
 
-      const additionalData = await getAllPersons(newPage, PAGE_SIZE);
+      const additionalData = await getAllCompanies(newPage, PAGE_SIZE);
       if (!additionalData || additionalData.length < PAGE_SIZE) {
         setHasMore(false);
         return;
       }
 
       setCurrentPage(newPage);
-      setPersonList([...personList, ...additionalData]);
+      setCompanyList([...companyList, ...additionalData]);
     });
   };
 
   const exportSearchString = async (searchString) => {
-    const searchResult = await searchPersons(searchString);
-    setPersonList(searchResult);
+    const searchResult = await searchCompany(searchString);
+    setCompanyList(searchResult);
   };
 
   const handleOnMouseOver = (index) => {
     setIsHover(true);
-    setSelectedInfo(personList[index]);
+    setSelectedInfo(companyList[index]);
   };
 
   const handleOnMouseOut = () => {
@@ -130,12 +103,12 @@ export default function CompanyListPage(props) {
         onClose={() => setDeleteModalOpen(false)}
         hasCancel
         hasConfirm
-        onConfirm={() => onConfirmDeletePerson(personToDelete)}
+        onConfirm={() => onConfirmDeleteCompany(companyToDelete)}
       >
         <div className={classes.DeleteModal}>
           <h1 >Warning</h1>
           <p >
-          Are you sure you want to delete this encounter?
+          Are you sure you want to delete this company?
           You cannot undo this action.
           </p>
         </div>
@@ -156,7 +129,7 @@ export default function CompanyListPage(props) {
         </div>
         <div className={classes.List}>
           <InfiniteScroll
-            dataLength={personList.length}
+            dataLength={companyList.length}
             next={fetchMoreData}
             hasMore={hasMore}
             loader={<h4>Loading...</h4>}
@@ -166,7 +139,7 @@ export default function CompanyListPage(props) {
               </p>
             }
           >
-            {personList.map((person, index) => {
+            {companyList.map((company, index) => {
               return (
                 <div
                   className={classes.PersonCard}
@@ -174,16 +147,16 @@ export default function CompanyListPage(props) {
                   onMouseOver={() => handleOnMouseOver(index)}
                   onMouseOut={handleOnMouseOut}
                 >
-                  <PersonCard
-                    id= {person.id}
-                    name= {`${person.first_name} ${person.last_name || ''}`}
-                    numEncounters = {person.encounters?.length}
-                    lastMet= {person.lastMet}
-                    onClick={() => onClickPersonCard(person._id)}
-                    onEdit={(e) => onEditPersonCardClicked(e, person._id)}
-                    onDelete={(e) => onDeletePersonCardClicked(e, person._id)}
-                    firstMet= {person.first_met}
-                    image={person.image}
+                  <CompanyCard
+                    id= {company.id}
+                    name= {company.name}
+                    location = {company.location}
+                    description = {company.description}
+                    onClick={() => onClickCompanyCard(company.id)}
+                    onEdit={(e) => onEditCompanyCardClicked(e, company.id)}
+                    onDelete={(e) => onDeleteCompanyCardClicked(e, company.id)}
+                    dateFounded= {company.date_founded}
+                    image={company.image}
                   />
                 </div>
               );

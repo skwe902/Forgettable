@@ -1,45 +1,49 @@
-import React, {useContext} from 'react';
+import React, {useState, useEffect} from 'react';
 import classes from './CompanyPage.module.css';
-import CustomButton from '../../components/CustomButton/CustomButton';
-import {AuthContext} from '../../context/AuthContext';
-import mockData from './mockData-company';
+import {getCompany} from '../../services';
+import {Link, Navigate, useParams} from 'react-router-dom';
+import {unmarshalCompany} from '../../functions/dataUnmarshaller';
 
-function CompanyPage() {
-  const list = mockData.persons;
-  const updatedList = list.map((employee)=>{
-    // eslint-disable-next-line react/jsx-key
-    return <li>{employee}</li>;
+const CompanyPage = (props) => {
+  const {id} = useParams();
+  const [company, setCompany] = useState({
+    id: '',
+    name: '',
+    location: '',
+    description: '',
+    dateFounded: null,
+    image: '',
   });
+
+  useEffect(async () => {
+    const result = await getCompany(id);
+
+    setCompany(unmarshalCompany(result));
+  }, [id]);
 
   return (
     <div className={classes.SettingsPage}>
-      <h1>{mockData.name}</h1>
+      <h1>{company.name}</h1>
       <div className={classes.ContentContainer}>
         <h2>
           Company Information
         </h2>
         <div className={classes.DetailSet}>
           <h4>Location</h4>
-          <p>{mockData.location}</p>
+          <p>{company.location}</p>
         </div>
         <div className={classes.DetailSet}>
           <h4>Description</h4>
-          <p>{mockData.description}</p>
+          <p>{company.description}</p>
         </div>
         <div className={classes.DetailSet}>
           <h4>Date Founded</h4>
-          <p>{mockData.date_founded}</p>
-        </div>
-        <h2>
-          List of Employees
-        </h2>
-        <div className={classes.DetailSet}>
-          <ul>{updatedList}</ul>
+          <p>{company.dateFounded}</p>
         </div>
       </div>
     </div>
   );
-}
+};
 
 export default CompanyPage;
 
